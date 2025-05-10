@@ -41,7 +41,10 @@ local function check_update()
 	end)
 end
 
-function config_sync.setup()
+function config_sync.setup(opts)
+	if opts.target_branch then
+		target_branch = opts.target_branch
+	end
 	vim.api.nvim_create_user_command("CheckUpdate", check_update, {})
 end
 
