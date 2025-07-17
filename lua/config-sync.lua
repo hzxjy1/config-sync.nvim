@@ -19,7 +19,7 @@ nvim_config_dir="%s"; \
 target_branch="%s"; \
 [ -n "$target_branch" ] || exit 2; \
 GIT="git -C $nvim_config_dir"; \
-current_branch=$(${GIT} branch --show-current 2>/dev/null) || exit 3; \
+current_branch=$(${GIT} symbolic-ref --short HEAD 2>/dev/null || ${GIT} rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 3; \
 [ "$current_branch" = "$target_branch" ] || exit 4; \
 ${GIT} fetch || exit 5; \
 ${GIT} rev-list HEAD..origin/"$target_branch" | grep -q . || exit 6; \
