@@ -2,6 +2,7 @@ local config_sync = {}
 
 local nvim_config_dir = vim.fn.stdpath("config")
 local target_branch = "master"
+local remote = "origin"
 local error_bar = {
 	string.format("Configuration directory does not exist: %s", nvim_config_dir),
 	string.format("Git branch is not specified: %s", target_branch),
@@ -21,12 +22,13 @@ target_branch="%s"; \
 GIT="git -C $nvim_config_dir"; \
 current_branch=$(${GIT} symbolic-ref --short HEAD 2>/dev/null || ${GIT} rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 3; \
 [ "$current_branch" = "$target_branch" ] || exit 4; \
-${GIT} fetch || exit 5; \
-${GIT} rev-list HEAD..origin/"$target_branch" | grep -q . || exit 6; \
-${GIT} pull || exit 7; \
+${GIT} fetch "$remote" || exit 5; \
+${GIT} rev-list HEAD.."$remote"/"$target_branch" | grep -q . || exit 6; \
+${GIT} pull "$remote" "$target_branch" || exit 7; \
 exit 0
 ]],
 	nvim_config_dir,
+	remote,
 	target_branch
 )
 
