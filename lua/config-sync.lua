@@ -30,13 +30,19 @@ exit 0
 	target_branch
 )
 
+local function safe_notify(msg)
+	vim.schedule(function()
+		vim.notify(msg, vim.log.levels.ERROR)
+	end)
+end
+
 local function check_update()
 	---@diagnostic disable: missing-fields
 	vim.loop.spawn("sh", {
 		args = { "-c", exec_str },
 	}, function(code)
 		if error_bar[code] then
-			vim.notify(error_bar[code])
+			safe_notify("Nvim update: " .. error_bar[code])
 		end
 	end)
 end
